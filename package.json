@@ -14,6 +14,7 @@
     "dependencies": {
         "bootstrap": "^4.6.2",
         "font-awesome": "^4.7.0",
+        "prop-types": "^15.8.1",
         "react": "^16.14.0",
         "react-dom": "^16.14.0"
     },
@@ -26,6 +27,7 @@
         "css-loader": "^6.8.1",
         "file-loader": "^6.2.0",
         "html-webpack-plugin": "^5.5.3",
+        "inline-source-map": "^0.6.2",
         "style-loader": "^3.3.3",
         "webpack": "^5.88.2",
         "webpack-cli": "^5.1.4",
