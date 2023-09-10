@@ -1,12 +1,15 @@
 import React, { Component, Fragment } from 'react';
+import Main from './components/Main';
+import NavBar from './components/NavBar';
 
 class App extends Component {
     state = {};
     render() {
         return (
-            <main role='main' className='container'>
-                <h1>Hello, World!</h1>
-            </main>
+            <Fragment>
+                <NavBar></NavBar>
+                <Main></Main>
+            </Fragment>
         );
     }
 }
