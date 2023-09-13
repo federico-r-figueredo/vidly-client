@@ -2,6 +2,10 @@
     "name": "vidly-client",
     "version": "1.0.0",
     "description": "",
+    "engines": {
+        "node": "18.17",
+        "npm": "9.6.7"
+    },
     "private": true,
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",

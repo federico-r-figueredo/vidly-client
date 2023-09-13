@@ -67,6 +67,22 @@ const movies = [
         liked: true
     },
     {
+        _id: '5b21ca3eeb7f6fbccd47183f',
+        title: 'Jurassic Park',
+        genre: { _id: '5b21ca3eeb7f6fbccd471820', name: 'Thriller' },
+        numberInStock: 4,
+        dailyRentalRate: 3.5,
+        liked: true
+    },
+    {
+        _id: '5b21ca3eeb7f6fbccd47184f',
+        title: 'Jurassic Park: The Lost World',
+        genre: { _id: '5b21ca3eeb7f6fbccd471820', name: 'Thriller' },
+        numberInStock: 4,
+        dailyRentalRate: 3.5,
+        liked: true
+    },
+    {
         _id: '5b21ca3eeb7f6fbccd471821',
         title: 'The Avengers',
         genre: { _id: '5b21ca3eeb7f6fbccd471818', name: 'Action' },

@@ -1,32 +1,36 @@
 import React, { Component, Fragment } from 'react';
 import { getMovies } from '../services/fakeMovieService';
+import { getGenres } from '../services/fakeGenreService';
 import Like from './common/Like';
 import Pagination from './common/Pagination';
-import { paginate } from '../utils/paginate';
+import { paginate as paginateMovies } from '../utils/paginate';
+import ListGroup from './ListGroup';
 
 class Movies extends Component {
     state = {
         movies: [],
-        pagesCount: 0,
+        genres: [],
+        currentPage: 1,
         pageSize: 4,
-        currentPage: 1
+        selectedGenre: null
     };
 
-    constructor() {
-        super();
-        this.state.movies = getMovies();
-        this.state.pagesCount = this.calcPagesCount();
+    handleGenreSelect = (genre) => {
+        this.setState({ selectedGenre: genre, currentPage: 1 });
+    };
+
+    componentDidMount() {
+        const genres = [{ name: 'All Genres' }, ...getGenres()];
+        this.setState({
+            movies: getMovies(),
+            genres,
+            selectedGenre: genres[0]
+        });
     }
 
     removeMovie = (id) => {
         const movies = this.state.movies.filter((x) => x._id !== id);
-        const pagesCount = this.calcPagesCount(movies);
-        const currentPage =
-            pagesCount !== this.state.pagesCount &&
-            this.state.currentPage === this.state.pagesCount
-                ? pagesCount
-                : this.state.currentPage;
-        this.setState({ pagesCount, movies, currentPage });
+        this.setState({ movies });
     };
 
     handleLike = (movie) => {
@@ -43,22 +47,60 @@ class Movies extends Component {
         });
     };
 
-    calcPagesCount(movies = this.state.movies) {
+    calcPagesCount(movies) {
         return Math.ceil(movies.length / this.state.pageSize);
     }
 
+    calcCurrentPage(pagesCount) {
+        return pagesCount < this.state.currentPage
+            ? pagesCount
+            : this.state.currentPage;
+    }
+
+    filterMovies() {
+        return this.state.selectedGenre && this.state.selectedGenre._id
+            ? this.state.movies.filter(
+                  (movie) => movie.genre._id === this.state.selectedGenre._id
+              )
+            : this.state.movies;
+    }
+
     render() {
-        const { length: count } = this.state.movies;
-        const { pagesCount, movies, currentPage, pageSize } = this.state;
-        const paginatedMovies = paginate(movies, currentPage, pageSize);
-        return (
-            <div className='card mt-5'>
-                <div className='card-body'>
-                    {count === 0 ? (
+        console.log('render!');
+        if (!this.state.movies.length)
+            return (
+                <div className='card'>
+                    <div className='card-body text-center'>
                         <span>There are no movies in the database</span>
-                    ) : (
-                        <Fragment>
-                            <span>Showing {count} movies in the database</span>
+                    </div>
+                </div>
+            );
+
+        const { genres, pageSize, selectedGenre } = this.state;
+        const filteredMovies = this.filterMovies();
+        const pagesCount = this.calcPagesCount(filteredMovies);
+        const currentPage = this.calcCurrentPage(pagesCount);
+        const paginatedMovies = paginateMovies(
+            filteredMovies,
+            currentPage,
+            pageSize
+        );
+        return (
+            <div className='row'>
+                <div className='col-2'>
+                    <ListGroup
+                        items={genres}
+                        selectedItem={selectedGenre}
+                        onItemSelect={this.handleGenreSelect}
+                    />
+                </div>
+                <div className='col-10'>
+                    <div className='card'>
+                        <div className='card-body'>
+                            <span>
+                                Showing {filteredMovies.length} movies in the
+                                database
+                            </span>
                             <table className='table'>
                                 <thead>
                                     <tr>
@@ -112,8 +154,8 @@ class Movies extends Component {
                                 currentPage={currentPage}
                                 onPageChange={this.handlePageChange}
                             />
-                        </Fragment>
-                    )}
+                        </div>
+                    </div>
                 </div>
             </div>
         );
