@@ -1,14 +1,15 @@
-import React, { Component } from 'react';
-import Movies from './Movies';
+import React from 'react';
+import Container from './common/Container';
+import Movies from '../components/Movies';
 
-class Main extends Component {
-    render() {
-        return (
-            <main role='main' className='container mt-5'>
+function Main() {
+    return (
+        <main role='main'>
+            <Container>
                 <Movies />
-            </main>
-        );
-    }
+            </Container>
+        </main>
+    );
 }
 
 export default Main;

@@ -1,10 +1,10 @@
 import React from 'react';
 
-function Like({ element, onLikeToggle }) {
+function Like({ liked, onLikeToggle }) {
     return (
         <i
-            onClick={() => onLikeToggle(element)}
-            className={`fa fa-heart${element.liked ? '' : '-o'}`}
+            onClick={() => onLikeToggle()}
+            className={`fa fa-heart${liked ? '' : '-o'}`}
             aria-hidden='true'
             style={{
                 cursor: 'pointer'
