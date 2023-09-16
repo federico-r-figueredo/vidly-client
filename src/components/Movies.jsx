@@ -10,6 +10,7 @@ import Card from './common/Card';
 import Column from './common/Column';
 import Row from './common/Row';
 import EmptyMoviesTable from './EmptyMoviesTable';
+import _ from 'lodash';
 
 class Movies extends Component {
     state = {
@@ -17,8 +18,10 @@ class Movies extends Component {
         genres: [],
         currentPage: 1,
         pageSize: 4,
-        selectedGenre: null
+        selectedGenre: null,
+        sortColumn: { path: 'title', ascOrder: true }
     };
+
     componentDidMount() {
         const genres = [{ _id: '*', name: 'All Genres' }, ...getGenres()];
         this.setState({
@@ -32,7 +35,7 @@ class Movies extends Component {
         this.setState({ selectedGenre: genre, currentPage: 1 });
     };
 
-    handleRemoveMovie = (id) => {
+    handleDelete = (id) => {
         const movies = this.state.movies.filter((x) => x._id !== id);
         this.setState({ movies });
     };
@@ -48,6 +51,12 @@ class Movies extends Component {
     handlePageChange = (page) => {
         this.setState({
             currentPage: page
+        });
+    };
+
+    handleSort = (sortColumn) => {
+        this.setState({
+            sortColumn
         });
     };
 
@@ -69,19 +78,45 @@ class Movies extends Component {
             : this.state.currentPage;
     }
 
+    // TODO: Improve this mess
+    sortMovies(movies) {
+        return [...movies].sort((a, b) => {
+            const valueA = _.get(a, this.state.sortColumn.path);
+            const valueB = _.get(b, this.state.sortColumn.path);
+            if (
+                this.state.sortColumn.ascOrder
+                    ? valueA < valueB
+                    : valueA > valueB
+            ) {
+                return -1;
+            }
+
+            if (
+                this.state.sortColumn.ascOrder
+                    ? valueA > valueB
+                    : valueA < valueB
+            ) {
+                return 1;
+            }
+
+            return 0;
+        });
+    }
+
     computeDerivedState() {
         const { pageSize } = this.state;
         const filteredMovies = this.filterMovies();
+        const sortedMovies = this.sortMovies(filteredMovies);
         const pagesCount = this.calcPagesCount(filteredMovies);
         const currentPage = this.calcCurrentPage(pagesCount);
         const paginatedMovies = paginateMovies(
-            filteredMovies,
+            sortedMovies,
             currentPage,
             pageSize
         );
 
         return {
-            filteredMovies,
+            sortedMovies,
             pagesCount,
             currentPage,
             paginatedMovies
@@ -92,8 +127,8 @@ class Movies extends Component {
         console.log('render!');
         if (!this.state.movies.length) return <EmptyMoviesTable />;
 
-        const { genres, selectedGenre } = this.state;
-        const { filteredMovies, pagesCount, currentPage, paginatedMovies } =
+        const { genres, selectedGenre, sortColumn } = this.state;
+        const { sortedMovies, pagesCount, currentPage, paginatedMovies } =
             this.computeDerivedState();
         return (
             <Row>
@@ -106,11 +141,13 @@ class Movies extends Component {
                 </Column>
                 <Column width={10}>
                     <Card>
-                        <MoviesCount moviesCount={filteredMovies.length} />
+                        <MoviesCount moviesCount={sortedMovies.length} />
                         <MoviesTable
                             movies={paginatedMovies}
-                            handleLike={this.handleLike}
-                            removeMovie={this.handleRemoveMovie}
+                            sortColumn={sortColumn}
+                            onLike={this.handleLike}
+                            onDelete={this.handleDelete}
+                            onSort={this.handleSort}
                         />
                         <Pagination
                             pagesCount={pagesCount}
