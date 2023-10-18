@@ -1,15 +1,7 @@
 import React from 'react';
-import Container from './common/Container';
-import Movies from '../components/Movies';
 
-function Main() {
-    return (
-        <main role='main'>
-            <Container>
-                <Movies />
-            </Container>
-        </main>
-    );
+function Main({ children }) {
+    return <main role='main'>{children}</main>;
 }
 
 export default Main;

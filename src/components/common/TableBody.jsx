@@ -12,9 +12,7 @@ class TableBody extends Component {
                     <tr key={item._id} className='text-center'>
                         {columns.map((column) => (
                             <td key={this.createKey(item, column)}>
-                                {column.content
-                                    ? column.content(item)
-                                    : _.get(item, column.path)}
+                                {column.content(item, column)}
                             </td>
                         ))}
                     </tr>

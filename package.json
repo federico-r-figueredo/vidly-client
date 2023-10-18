@@ -18,10 +18,12 @@
     "dependencies": {
         "bootstrap": "4.6.2",
         "font-awesome": "4.7.0",
+        "joi-browser": "13.4",
+        "lodash": "4.17.11",
         "prop-types": "15.8.1",
         "react": "16.14.0",
         "react-dom": "16.14.0",
-        "lodash": "4.17.11"
+        "react-router-dom": "4.3.1"
     },
     "devDependencies": {
         "@babel/core": "7.22.17",
